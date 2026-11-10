@@ -16,3 +16,8 @@ app.get("/calcular", (req, res) => {
 });
 
 module.exports = { app, total };
+
+// Solo levanta el servidor con "node app.js", no cuando lo importa el test
+if (require.main === module) {
+  app.listen(3000, () => console.log("Escuchando en http://localhost:3000"));
+}
