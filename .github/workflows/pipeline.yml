@@ -18,3 +18,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: docker run --rm -v "$PWD":/src aquasec/trivy:latest config --exit-code 1 --severity HIGH,CRITICAL /src
+      - name: DAST (OWASP ZAP baseline)
+        run: |
+          node app.js &
+          curl --retry 10 --retry-connrefused --retry-delay 1 -s "http://localhost:3000/total?p=2&c=3"
+          docker run --rm --network host ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "http://localhost:3000/total?p=2&c=3" -I
